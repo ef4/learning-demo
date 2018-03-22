@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { task, race } from 'ember-concurrency';
+import { rAF, waitForEvent } from './-utils/concurrency';
 
 // Our world will be this wide, within our own coordinate system
 const WIDTH = 1000;
@@ -16,7 +17,7 @@ export default Component.extend({
         y,
         r
       })));
-      yield new Promise(resolve => requestAnimationFrame(resolve));
+      yield rAF();
     }
   }).on('init'),
 
@@ -55,15 +56,4 @@ export default Component.extend({
     point.y = event.y;
     return point.matrixTransform(svg.getScreenCTM().inverse());
   }
-
 });
-
-function waitForEvent(object, eventName) {
-  return new Promise(resolve => {
-    function handler(event) {
-      object.removeEventListener(eventName, handler);
-      resolve(event);
-    }
-    object.addEventListener(eventName, handler);
-  });
-}
