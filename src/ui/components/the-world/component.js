@@ -1,6 +1,5 @@
 import Component from '@ember/component';
 import { task, race } from 'ember-concurrency';
-import { set } from '@ember/object';
 
 // Our world will be this wide, within our own coordinate system
 const WIDTH = 1000;
