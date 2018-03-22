@@ -13,13 +13,13 @@ export default Component.extend({
     return this.aliveDots.concat([this.newDot]);
   }),
 
-  // BEGIN-SNIPPET pick-size
   pickSize: task(function * (startEvent) {
     let startLocation = this.whereInTheWorld(startEvent);
     this.set('newDot', {
       x: startLocation.x,
       y: startLocation.y,
-      r: 0
+      r: 0,
+      hue: 0
     });
     while (true) {
       let event = yield race([
@@ -30,11 +30,14 @@ export default Component.extend({
       let dx = location.x - startLocation.x;
       let dy = location.y - startLocation.y;
       let r = Math.round(Math.sqrt(dx*dx + dy*dy));
+      // BEGIN-SNIPPET pick-size-hue
       this.set('newDot', {
         x: this.newDot.x,
         y: this.newDot.y,
-        r
+        r,
+        hue: (r + 180) % 360
       });
+      // END-SNIPPET
       if (event.type === 'mouseup') {
         break;
       }
@@ -42,7 +45,6 @@ export default Component.extend({
     this.set('aliveDots', this.aliveDots.concat([this.newDot]));
     this.set('newDot', null);
   }),
-  // END-SNIPPET
 
   whereInTheWorld(event) {
     let svg = this.element.querySelector('svg');

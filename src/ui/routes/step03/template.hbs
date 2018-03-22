@@ -1,0 +1,10 @@
+{{#the-world as |dots|}}
+  {{#each dots as |dot|}}
+  {{! BEGIN-SNIPPET pick-size-hue}}
+    <circle cx={{dot.x}}
+            cy={{dot.y}}
+            r={{dot.r}}
+            fill="hsl({{dot.hue}},100%,50%)" />
+  {{! END-SNIPPET }}
+  {{/each}}
+{{/the-world}}

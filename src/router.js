@@ -12,6 +12,9 @@ Router.map(function() {
   this.route('step01-code2');
   this.route('step01-code3');
   this.route('step02');
+  this.route('step02-code');
+  this.route('step03');
+  this.route('step03-code');
   this.route('step0n');
 });
 
