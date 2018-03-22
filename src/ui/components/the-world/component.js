@@ -1,5 +1,6 @@
 import Component from '@ember/component';
-import { task } from 'ember-concurrency';
+import { task, race } from 'ember-concurrency';
+import { set } from '@ember/object';
 
 // Our world will be this wide, within our own coordinate system
 const WIDTH = 1000;
@@ -20,12 +21,33 @@ export default Component.extend({
     }
   }).on('init'),
 
-  newDot(event) {
-    let location = this.whereInTheWorld(event);
-    this.set('dots', this.dots.concat([
-      { x: location.x, y: location.y, r: 20 }
-    ]));
+  makeNewDot(event) {
+    this.pickSize.perform(event);
   },
+
+  pickSize: task(function * (startEvent) {
+    let startLocation = this.whereInTheWorld(startEvent);
+    this.set('newDot', { x: startLocation.x, y: startLocation.y, r: 0 });
+    while (true) {
+      let event = yield race([
+        waitForEvent(window, 'mousemove'),
+        waitForEvent(window, 'mouseup')
+      ]);
+      let location = this.whereInTheWorld(event);
+      let dx = location.x - startLocation.x;
+      let dy = location.y - startLocation.y;
+      this.set('newDot', {
+        x: this.newDot.x,
+        y: this.newDot.y,
+        r: Math.round(Math.sqrt(dx*dx + dy*dy))
+      });
+      if (event.type === 'mouseup') {
+        break;
+      }
+    }
+    this.set('dots', this.dots.concat([this.newDot]));
+    this.set('newDot', null);
+  }),
 
   whereInTheWorld(event) {
     let svg = this.element.querySelector('svg');
@@ -36,3 +58,13 @@ export default Component.extend({
   }
 
 });
+
+function waitForEvent(object, eventName) {
+  return new Promise(resolve => {
+    function handler(event) {
+      object.removeEventListener(eventName, handler);
+      resolve(event);
+    }
+    object.addEventListener(eventName, handler);
+  });
+}
