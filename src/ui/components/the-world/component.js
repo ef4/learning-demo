@@ -11,7 +11,7 @@ export default Component.extend({
           x: x + vx,
           y: y + vy,
           vx,
-          vy: vy + 0,
+          vy: vy + 1,
           r,
           hue
         };
