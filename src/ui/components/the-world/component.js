@@ -15,10 +15,6 @@ export default Component.extend({
     }
   }).on('init'),
 
-  makeNewDot(event) {
-    this.pickSize.perform(event);
-  },
-
   pickSize: task(function * (startEvent) {
     this.set('newDot', { x: startEvent.x, y: startEvent.y, r: 0 });
     while (true) {
