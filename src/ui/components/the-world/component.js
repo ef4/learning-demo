@@ -6,17 +6,18 @@ export default Component.extend({
   run: task(function * () {
     this.dots = [];
     while (true) {
-      this.set('dots', this.dots.map(({x,y,r}) => ({
+      this.set('dots', this.dots.map(({x,y,r,hue}) => ({
         x: x + 1,
         y,
-        r
+        r,
+        hue
       })));
       yield rAF();
     }
   }).on('init'),
 
   pickSize: task(function * (startEvent) {
-    this.set('newDot', { x: startEvent.x, y: startEvent.y, r: 0 });
+    this.set('newDot', { x: startEvent.x, y: startEvent.y, r: 0, hue: 0 });
     while (true) {
       let event = yield race([
         waitForEvent(window, 'mousemove'),
@@ -24,10 +25,12 @@ export default Component.extend({
       ]);
       let dx = event.x - startEvent.x;
       let dy = event.y - startEvent.y;
+      let r = Math.round(Math.sqrt(dx*dx + dy*dy));
       this.set('newDot', {
         x: this.newDot.x,
         y: this.newDot.y,
-        r: Math.round(Math.sqrt(dx*dx + dy*dy))
+        r,
+        hue: r % 360
       });
       if (event.type === 'mouseup') {
         break;

@@ -1,11 +1,11 @@
 <div class="the-world" onmousedown={{perform pickSize}}>
   <svg>
     {{#each dots as |dot|}}
-      <circle cx={{dot.x}} cy={{dot.y}} r={{dot.r}} />
+      <circle cx={{dot.x}} cy={{dot.y}} r={{dot.r}} fill="hsl({{dot.hue}},100%,50%)"/>
     {{/each}}
 
     {{#if newDot}}
-      <circle cx={{newDot.x}} cy={{newDot.y}} r={{newDot.r}} />
+      <circle cx={{newDot.x}} cy={{newDot.y}} r={{newDot.r}} fill="hsl({{newDot.hue}},100%,50%)"/>
     {{/if}}
   </svg>
 </div>
