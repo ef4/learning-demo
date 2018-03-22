@@ -1,17 +1,23 @@
 import Component from '@ember/component';
 import { task, race } from 'ember-concurrency';
 import { rAF, waitForEvent } from './-utils/concurrency';
+import { clock } from 'ember-animated';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
   run: task(function * () {
     this.dots = [];
+    let lastTick = clock.now();
     while (true) {
+      let now = clock.now();
+      let timeStep = now - lastTick;
+      lastTick = now;
       this.set('dots', this.dots.map(({x,y,vx,vy,r,hue}) => {
         return {
-          x: x + vx,
-          y: y + vy,
+          x: x + vx*timeStep,
+          y: y + vy*timeStep,
           vx,
-          vy: vy + 1,
+          vy: vy + 0.0003*timeStep,
           r,
           hue
         };
@@ -69,8 +75,8 @@ export default Component.extend({
       ]);
       let diffX = event.x - startEvent.x;
       let diffY = event.y - startEvent.y;
-      let vx = diffX / -10;
-      let vy = diffY / -10;
+      let vx = diffX / -100;
+      let vy = diffY / -100;
       this.set('newDot', {
         x: pinnedX + diffX,
         y: pinnedY + diffY,
@@ -87,6 +93,18 @@ export default Component.extend({
     this.set('newDot', null);
   }),
 
-
+  // The following is just a way to tell ember-animated that we are
+  // busy animating things. That only matters here because we're using
+  // ember-animated's `clock`, and the clock is only guaranteed
+  // consistent while animations are running. (In between animations,
+  // it can do things like adjust the clock to catch up to real time.)
+  motionService: service('-ea-motion'),
+  isAnimating: true,
+  didInsertElement() {
+    this.get('motionService').register(this);
+  },
+  willDestroyElement() {
+    this.get('motionService').unregister(this);
+  }
 
 });
