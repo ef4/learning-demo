@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { task, race } from 'ember-concurrency';
-import { rAF, waitForEvent } from './-utils/concurrency';
+import { rAF, waitForEvent } from 'living-animation/src/-utils/concurrency';
 import { clock } from 'ember-animated';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
