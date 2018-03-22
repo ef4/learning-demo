@@ -2,13 +2,7 @@ import Component from '@ember/component';
 import { task, race } from 'ember-concurrency';
 import { rAF, waitForEvent } from './-utils/concurrency';
 
-// Our world will be this wide, within our own coordinate system
-const WIDTH = 1000;
-
 export default Component.extend({
-  // This puts the 0,0 point at the center of the world
-  viewBox: `${WIDTH/-2} ${WIDTH/-2} ${WIDTH} ${WIDTH}`,
-
   run: task(function * () {
     this.dots = [];
     while (true) {

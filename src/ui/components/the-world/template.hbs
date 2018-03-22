@@ -1,5 +1,5 @@
 <div class="the-world" onmousedown={{action makeNewDot}}>
-  <svg viewBox={{viewBox}} preserveAspectRatio="xMidYMid meet">
+  <svg viewBox={{viewbox width}} preserveAspectRatio="xMidYMid meet">
     {{#each dots as |dot|}}
       <circle cx={{dot.x}} cy={{dot.y}} r={{dot.r}} />
     {{/each}}
