@@ -8,13 +8,9 @@ const LEFT_ARROW = 37;
 const RIGHT_ARROW = 39;
 
 export default Route.extend({
-  fastboot: inject(),
   router: inject(),
 
   beforeModel() {
-    if (this.fastboot.isFastBoot) {
-      return;
-    }
     document.addEventListener('keydown', event => {
       switch (event.keyCode) {
       case ENTER:

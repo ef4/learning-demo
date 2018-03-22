@@ -20,9 +20,6 @@ module.exports = function(defaults) {
 
   app.import('node_modules/fullscreen-api-polyfill/fullscreen-api-polyfill.js', {
     using: [
-      {
-        transformation: 'fastbootShim'
-      }
     ]
   });
   return app.toTree();
