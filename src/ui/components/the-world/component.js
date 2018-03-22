@@ -3,19 +3,24 @@ import { task, race } from 'ember-concurrency';
 import { rAF, waitForEvent } from './-utils/concurrency';
 import { clock } from 'ember-animated';
 import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   run: task(function * () {
-    this.dots = [];
+    this.aliveDots = [];
     let lastTick = clock.now();
     while (true) {
       let now = clock.now();
       let timeStep = now - lastTick;
       lastTick = now;
-      this.set('dots', this.applyPhysics(this.dots, timeStep));
+      this.set('aliveDots', this.applyPhysics(this.aliveDots, timeStep));
       yield rAF();
     }
   }).on('init'),
+
+  dots: computed('aliveDots', 'newDot', function() {
+    return this.aliveDots.concat([this.newDot]);
+  }),
 
   createDot: task(function * (startEvent) {
     if (startEvent.target.classList.contains('new-dot')) {
@@ -34,6 +39,7 @@ export default Component.extend({
       vy: 0,
       r: 0,
       hue: 0,
+      class: 'new-dot'
     });
     while (true) {
       let event = yield race([
@@ -50,7 +56,8 @@ export default Component.extend({
         vx: this.newDot.vx,
         vy: this.newDot.vy,
         r,
-        hue: ( r + 180 ) % 360
+        hue: ( r + 180 ) % 360,
+        class: this.newDot.class
       });
       if (event.type === 'mouseup') {
         break;
@@ -78,13 +85,16 @@ export default Component.extend({
         vx,
         vy,
         r: this.newDot.r,
-        hue: this.newDot.hue
+        hue: this.newDot.hue,
+        class: this.newDot.class
       });
       if (event.type === 'mouseup') {
         break;
       }
     }
-    this.set('dots', this.dots.concat([this.newDot]));
+    this.set('aliveDots', this.aliveDots.concat(Object.assign({}, this.newDot, {
+      class: null
+    })));
     this.set('newDot', null);
   }),
 

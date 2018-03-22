@@ -1,9 +1,9 @@
-{{#the-world applyPhysics=applyPhysics as |dots newDot|}}
+{{#the-world applyPhysics=applyPhysics as |dots|}}
   {{#each dots as |dot|}}
-    <circle cx={{dot.x}} cy={{dot.y}} r={{dot.r}} fill="hsl({{dot.hue}},100%,50%)"/>
+    <circle cx={{dot.x}}
+            cy={{dot.y}}
+            r={{dot.r}}
+            fill="hsl({{dot.hue}},100%,50%)"
+            class={{dot.class}} />
   {{/each}}
-
-  {{#if newDot}}
-    <circle class="new-dot" cx={{newDot.x}} cy={{newDot.y}} r={{newDot.r}} fill="hsl({{newDot.hue}},100%,50%)"/>
-  {{/if}}
 {{/the-world}}
