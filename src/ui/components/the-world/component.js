@@ -5,7 +5,7 @@ import { clock } from 'ember-animated';
 import { inject as service } from '@ember/service';
 
 function massOf(dot) {
-  return Math.pow(dot.r, 3);
+  return 100 * Math.pow(dot.r, 3);
 }
 
 export default Component.extend({
@@ -31,7 +31,7 @@ export default Component.extend({
               return { ax: 0, ay: 0 };
             }
           }
-          let force = 0.00001*massOf(otherDot)*massOf(dot)/distanceSquared;
+          let force = 0.0000001*massOf(otherDot)*massOf(dot)/distanceSquared;
           let fx = force * dx / distance;
           let fy = force * dy / distance;
           let ax = fx / massOf(dot);
@@ -98,7 +98,7 @@ export default Component.extend({
         vx: this.newDot.vx,
         vy: this.newDot.vy,
         r,
-        hue: r % 360
+        hue: ( r + 180 ) % 360
       });
       if (event.type === 'mouseup') {
         break;
