@@ -4,6 +4,10 @@ import { rAF, waitForEvent } from './-utils/concurrency';
 import { clock } from 'ember-animated';
 import { inject as service } from '@ember/service';
 
+function massOf(dot) {
+  return Math.pow(dot.r, 3);
+}
+
 export default Component.extend({
   run: task(function * () {
     this.dots = [];
@@ -12,16 +16,51 @@ export default Component.extend({
       let now = clock.now();
       let timeStep = now - lastTick;
       lastTick = now;
-      this.set('dots', this.dots.map(({x,y,vx,vy,r,hue}) => {
+
+
+      this.set('dots', this.dots.map(dot => {
+        let accelerations = this.dots.filter(d => d !== dot).map(otherDot => {
+          let dx = otherDot.x - dot.x;
+          let dy = otherDot.y - dot.y;
+          let distanceSquared = dx*dx + dy*dy;
+          let distance = Math.sqrt(dx*dx + dy*dy);
+          if (distance < otherDot.r + dot.r) {
+            if (dot.r < otherDot.r) {
+              return null;
+            } else {
+              return { ax: 0, ay: 0 }
+            }
+          }
+          let force = 0.00001*massOf(otherDot)*massOf(dot)/distanceSquared;
+          let fx = force * dx / distance;
+          let fy = force * dy / distance;
+          let ax = fx / massOf(dot);
+          let ay = fy / massOf(dot);
+          return { ax, ay };
+        });
+
+        if (accelerations.any(a => !a)) {
+          return null;
+        }
+
+        let { ax, ay } = accelerations.reduce(({ax: accumX, ay: accumY}, { ax, ay }) => {
+          return {
+            ax: accumX + ax,
+            ay: accumY + ay
+          }
+        }, { ax: 0, ay: 0 });
+
+        let {x,y,vx,vy,r,hue} = dot;
+
         return {
           x: x + vx*timeStep,
           y: y + vy*timeStep,
-          vx,
-          vy: vy + 0.0003*timeStep,
+          vx: vx + ax*timeStep,
+          vy: vy + ay*timeStep,
           r,
           hue
         };
-      }));
+      }).filter(Boolean));
       yield rAF();
     }
   }).on('init'),
