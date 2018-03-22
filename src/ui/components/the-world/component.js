@@ -8,12 +8,8 @@ export default Component.extend({
   // This puts the 0,0 point at the center of the world
   viewBox: `${WIDTH/-2} ${WIDTH/-2} ${WIDTH} ${WIDTH}`,
 
-  init() {
-    this._super();
-    this.dots = [];
-  },
-
   run: task(function * () {
+    this.dots = [];
     while (true) {
       this.set('dots', this.dots.map(({x,y,r}) => ({
         x: x + 1,
