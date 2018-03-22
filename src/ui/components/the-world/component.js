@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { task } from 'ember-concurrency';
 
-// The world will be this wide in our own coordinate system.
+// Our world will be this wide, within our own coordinate system
 const WIDTH = 1000;
 
 export default Component.extend({
@@ -10,20 +10,33 @@ export default Component.extend({
 
   init() {
     this._super();
-    this.dots = [
-      { x: 0, y: 0, r: 20 }
-    ];
+    this.dots = [];
   },
 
   run: task(function * () {
     while (true) {
-      this.set('dots', this.get('dots').map(({x,y,r}) => ({
+      this.set('dots', this.dots.map(({x,y,r}) => ({
         x: x + 1,
         y,
         r
       })));
       yield new Promise(resolve => requestAnimationFrame(resolve));
     }
-  }).on('init')
+  }).on('init'),
+
+  newDot(event) {
+    let location = this.whereInTheWorld(event);
+    this.set('dots', this.dots.concat([
+      { x: location.x, y: location.y, r: 20 }
+    ]));
+  },
+
+  whereInTheWorld(event) {
+    let svg = this.element.querySelector('svg');
+    let point = svg.createSVGPoint();
+    point.x = event.x;
+    point.y = event.y;
+    return point.matrixTransform(svg.getScreenCTM().inverse());
+  }
 
 });
