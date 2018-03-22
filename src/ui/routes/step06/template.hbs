@@ -1,0 +1,9 @@
+{{#the-world applyPhysics=applyPhysics as |dots|}}
+  {{#each dots as |dot|}}
+    <circle cx={{dot.x}}
+            cy={{dot.y}}
+            r={{dot.r}}
+            fill="hsl({{dot.hue}},100%,50%)"
+            class={{dot.class}} />
+  {{/each}}
+{{/the-world}}
