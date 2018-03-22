@@ -20,16 +20,14 @@ export default Component.extend({
   },
 
   pickSize: task(function * (startEvent) {
-    let startLocation = this.whereInTheWorld(startEvent);
-    this.set('newDot', { x: startLocation.x, y: startLocation.y, r: 0 });
+    this.set('newDot', { x: startEvent.x, y: startEvent.y, r: 0 });
     while (true) {
       let event = yield race([
         waitForEvent(window, 'mousemove'),
         waitForEvent(window, 'mouseup')
       ]);
-      let location = this.whereInTheWorld(event);
-      let dx = location.x - startLocation.x;
-      let dy = location.y - startLocation.y;
+      let dx = event.x - startEvent.x;
+      let dy = event.y - startEvent.y;
       this.set('newDot', {
         x: this.newDot.x,
         y: this.newDot.y,
@@ -41,13 +39,7 @@ export default Component.extend({
     }
     this.set('dots', this.dots.concat([this.newDot]));
     this.set('newDot', null);
-  }),
+  })
 
-  whereInTheWorld(event) {
-    let svg = this.element.querySelector('svg');
-    let point = svg.createSVGPoint();
-    point.x = event.x;
-    point.y = event.y;
-    return point.matrixTransform(svg.getScreenCTM().inverse());
-  }
+
 });
