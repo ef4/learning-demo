@@ -1,3 +1,4 @@
+// BEGIN-SNIPPET step01-component
 import Component from '@ember/component';
 import { task } from 'ember-concurrency';
 
@@ -26,3 +27,4 @@ export default Component.extend({
   }
 
 });
+// END-SNIPPET

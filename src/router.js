@@ -8,6 +8,9 @@ const Router = EmberRouter.extend({
 
 Router.map(function() {
   this.route('step01');
+  this.route('step01-code');
+  this.route('step01-code2');
+  this.route('step01-code3');
   this.route('step02');
   this.route('step0n');
 });
