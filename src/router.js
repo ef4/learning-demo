@@ -13,8 +13,13 @@ Router.map(function() {
   this.route('step01-code3');
   this.route('step02');
   this.route('step02-code');
-  this.route('step03');
   this.route('step03-code');
+  this.route('step03');
+  this.route('step04-code');
+  this.route('step04');
+  this.route('step05-code');
+  this.route('step05');
+
   this.route('step0n');
 });
 
