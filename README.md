@@ -1,6 +1,4 @@
-Hello intrepid traveler, this presentation is not done yet but you may come along for the ride.
-
-# living-animation
+# Demo from "Design for Learning at Ember NYC, March 2018
 
 This README outlines the details of collaborating on this Ember application.
 A short introduction of this app could easily go here.
