@@ -78,3 +78,13 @@ main {
 .animated-container:before, .animated-container:after {
     display: display;
 }
+
+.quote-slide {
+    font-size: 2em;
+    margin: 1em 4em;
+}
+
+.vs {
+    font-size: 8em;
+    text-align: center;
+}

@@ -21,8 +21,7 @@ Router.map(function() {
   this.route('step05');
   this.route('step06-code');
   this.route('step06');
-
-  this.route('step0n');
+  this.route('math');
 });
 
 export default Router;
